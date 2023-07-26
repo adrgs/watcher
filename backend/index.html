@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html>
+  
+<head>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: black;
+            color: white;
+        }
+        table {
+            width: 100%;
+            font-family: Menlo;
+            font-size: 12px;
+            border: 1px solid green;
+        }
+        tr {
+        border: 1px solid black;
+        }
+        .flex-container {
+            display: flex;
+        }
+
+        .flex-item {
+            flex: 1;
+        }
+
+        tr:nth-child(even) {
+        background-color: #333;
+        }
+
+        h1 {
+            color: green;
+        }
+
+        tr:nth-child(odd) {
+        background-color: black;
+        }
+        #ps {
+            border-collapse: collapse;
+            height: 500px;
+            overflow-y: scroll;
+            display: block;
+        }
+        #fr {
+            border-collapse: collapse;
+            height: 320px;
+            overflow-y: scroll;
+            display: block;
+        }
+        #fwr {
+            border-collapse: collapse;
+            height: 320px;
+            overflow-y: scroll;
+            display: block;
+        }
+    </style>
+    <!-- jQuery library -->
+    <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js">
+    </script>
+</head>
+  
+<body>
+    <h1>watcher</h1>
+    <table id="ps"></table>
+    <br>
+    <div class="flex-container">
+        <div class="flex-item"><table id="fr"></table></div>
+        <div class="flex-item"><table id="fwr"></table></div>
+      </div>
+    
+    
+      
+    <script>
+        if (location.protocol === "https:") { 
+            var protocol = "wss";
+        } else {
+            var protocol = "ws";
+        }
+        const socket = new WebSocket(`${protocol}://${location.host}/verysecret/ws`);
+
+        socket.addEventListener("open", () => {
+        console.log("WebSocket connection established.");
+        socket.send("my_cookie=8c61ed9702ba54f3");
+        });
+
+        socket.addEventListener("message", (event) => {
+        const data = JSON.parse(event.data);
+        if (data["ps"] && data["ps"].length>0) {
+            // for each process
+            if (data["ps"].length > 1) {
+                for (let i = 0; i < data["ps"].length; i++) {
+                    $('<tr><td></td></tr>').text(data["ps"][i]).appendTo('#ps');
+                }
+            } else {
+                $('<tr><td></td></tr>').text(data["ps"][0]).appendTo('#ps');
+            }
+        }
+        if (data["fr"] && data["fr"].length>0) {
+            // for each process
+            if (data["fr"].length > 1) {
+                for (let i = 0; i < data["fr"].length; i++) {
+                    $('<tr><td></td></tr>').text(data["fr"][i]).appendTo('#fr');
+                }
+            } else {
+                $('<tr><td></td></tr>').text(data["fr"][0]).appendTo('#fr');
+            }
+        }
+        if (data["fwr"] && data["fwr"].length>0) {
+            // for each process
+            if (data["fwr"].length > 1) {
+                for (let i = 0; i < data["fwr"].length; i++) {
+                    $('<tr><td></td></tr>').text(data["fwr"][i]).appendTo('#fwr');
+                }
+            } else {
+                $('<tr><td></td></tr>').text(data["fwr"][0]).appendTo('#fwr');
+            }
+        }
+        });
+
+        socket.addEventListener("close", (event) => {
+        console.log("WebSocket connection closed with code:", event.code);
+        });
+
+        socket.addEventListener("error", (error) => {
+        console.error("WebSocket error:", error);
+        });
+    </script>
+</body>
+  
+</html>
