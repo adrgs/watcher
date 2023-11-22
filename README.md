@@ -9,7 +9,7 @@ Configure Dockerfile then run (on the server):
 
 ```
 docker build . -t watcher
-docker run -v $(pwd)/target:/watcher/target -p8900:8900 watcher
+docker run -v $(pwd)/target:/watcher/target -d -p8900:8900 watcher
 # run binary from target/release/watcher on prod machine and capture the logs
 ```
 
