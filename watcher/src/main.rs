@@ -128,8 +128,8 @@ async fn main() -> Result<(), ()> {
                     continue;
                 }
 
-                let key = lc!(env!("KEY"));
-                let iv = lc!(env!("IV"));
+                let key = lc_env!("KEY");
+                let iv = lc_env!("IV");
                 let cipher = Aes128Cbc::new_from_slices(key.as_bytes(), iv.as_bytes()).unwrap();
                 let ciphertext = cipher.encrypt_vec(shared_var_str.as_bytes());
 
@@ -159,8 +159,8 @@ async fn main() -> Result<(), ()> {
                     continue;
                 }
 
-                let key = lc!(env!("KEY"));
-                let iv = lc!(env!("IV"));
+                let key = lc_env!("KEY");
+                let iv = lc_env!("IV");
                 let cipher = Aes128Cbc::new_from_slices(key.as_bytes(), iv.as_bytes()).unwrap();
                 let ciphertext = cipher.encrypt_vec(shared_var_str.as_bytes());
 
@@ -190,8 +190,8 @@ async fn main() -> Result<(), ()> {
                     continue;
                 }
 
-                let key = lc!(env!("KEY"));
-                let iv = lc!(env!("IV"));
+                let key = lc_env!("KEY");
+                let iv = lc_env!("IV");
                 let cipher = Aes128Cbc::new_from_slices(key.as_bytes(), iv.as_bytes()).unwrap();
                 let ciphertext = cipher.encrypt_vec(shared_var_str.as_bytes());
 

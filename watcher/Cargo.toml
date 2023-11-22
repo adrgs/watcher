@@ -10,4 +10,4 @@ reqwest = { version = "0.11.18", features = ["blocking"]}
 tokio = { version = "1", features = ["full"] }
 aes = "0.7.5"
 block-modes = "0.8.1"
-litcrypt = "0.3"
+litcrypt = { git = "https://github.com/anvie/litcrypt.rs", rev = "2f3c75e" }
