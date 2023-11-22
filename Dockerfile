@@ -24,9 +24,6 @@ COPY backend /app
 COPY watcher /watcher
 COPY start.sh /start.sh
 
-WORKDIR /watcher
-RUN cargo build --release
-
 WORKDIR /app
 RUN python3 -m pip install -r requirements.txt
 
