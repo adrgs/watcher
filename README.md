@@ -5,7 +5,7 @@ Disclaimer: This is CTF level code, for now. But still very fast
 
 ## Usage
 
-Configure Dockerfile then run:
+Configure Dockerfile then run (on the server):
 
 ```
 docker build . -t watcher
@@ -18,4 +18,11 @@ It's recommended to use Caddy for https configuration:
 watcher.your-domain.com {
 	reverse_proxy localhost:8900
 }
+```
+
+## Requirements
+
+bpftrace is required:
+```
+sudo apt install bpftrace -y
 ```
