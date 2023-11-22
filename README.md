@@ -5,13 +5,17 @@ Disclaimer: This is CTF level code, for now. But still very fast
 
 ## Usage
 
-```
-Run backend on the webserver. Redis instance needs to be running at 6379.
-Compile and run watcher on the target server. Make sure to set the URL correctly.
-```
-
-## Build
+Configure Dockerfile then run:
 
 ```
-LITCRYPT_ENCRYPT_KEY=your_secret_key cargo build --release
+docker build . -t watcher
+docker run -v $(pwd)/target:/watcher/target -p8900:8900 watcher
+# run binary from target/release/watcher on prod machine and capture the logs
+```
+
+It's recommended to use Caddy for https configuration:
+```
+watcher.your-domain.com {
+	reverse_proxy localhost:8900
+}
 ```

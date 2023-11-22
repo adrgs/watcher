@@ -1,15 +1,18 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException, Depends
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from Crypto.Cipher import AES
-from aioredis import from_url
+from redis import asyncio as aioredis
 from datetime import datetime, timedelta
-from starlette.responses import FileResponse
+from starlette.responses import HTMLResponse
 from starlette import status
+from typing import Annotated
 
 from fastapi.websockets import WebSocket, WebSocketDisconnect
+import os
 
 
 def get_timestamp():
-    return (datetime.utcnow() + timedelta(hours=3)).strftime("%Y-%m-%d %H:%M:%S")
+    return (datetime.utcnow() + timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S")
 
 
 def unpad(data):
@@ -21,20 +24,29 @@ def unpad(data):
     return data[:-padding]
 
 
-key = b"4cd50b3a7f8921e6"
-iv = b"39871eac6f5024db"
+key = os.environ["KEY"].encode("utf-8")
+iv = os.environ["IV"].encode("utf-8")
+cookie_val = os.environ["COOKIE"]
+username = os.environ["USERNAME"]
+password = os.environ["PASSWORD"]
 
 app = FastAPI()
 
+security = HTTPBasic()
+
 redis = None
+html_content = None
 
 
 @app.on_event("startup")
 async def startup_event():
     global redis
-    redis = await from_url(
+    global html_content
+    redis = await aioredis.from_url(
         f"redis://localhost", encoding="utf-8", decode_responses=True
     )
+
+    html_content = open("index.html", "r").read().replace("CHANGE_THIS", cookie_val)
 
 
 @app.on_event("shutdown")
@@ -45,12 +57,15 @@ async def shutdown_event():
 
 
 @app.get("/")
-async def root(request: Request):
-    cookie_value = request.cookies.get("my_cookie")
-    if cookie_value != "8c61ed9702ba54f3":
-        return {"message": "Hello, World!"}
+async def root(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
+    if not (credentials.username == username) or not (credentials.password == password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
 
-    return FileResponse("index.html")
+    return HTMLResponse(content=html_content, status_code=200)
 
 
 @app.websocket("/verysecret/ws")
@@ -58,7 +73,7 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
 
     cookie = await websocket.receive_text()
-    if cookie != "my_cookie=8c61ed9702ba54f3":
+    if cookie != "my_cookie=" + cookie_val:
         await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
         return
 
@@ -79,31 +94,37 @@ async def websocket_endpoint(websocket: WebSocket):
 
 
 @app.get("/verysecret/get_all_ps")
-async def get_all_ps(request: Request):
-    cookie_value = request.cookies.get("my_cookie")
-    if cookie_value != "8c61ed9702ba54f3":
-        return {"message": "Hello, World!"}
-
+async def get_all_ps(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
+    if not (credentials.username == username) or not (credentials.password == password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
     data = await redis.lrange("requests:ps", 0, -1)
     return {"data": data}
 
 
 @app.get("/verysecret/get_all_fr")
-async def get_all_fr(request: Request):
-    cookie_value = request.cookies.get("my_cookie")
-    if cookie_value != "8c61ed9702ba54f3":
-        return {"message": "Hello, World!"}
-
+async def get_all_fr(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
+    if not (credentials.username == username) or not (credentials.password == password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
     data = await redis.lrange("requests:fr", 0, -1)
     return {"data": data}
 
 
 @app.get("/verysecret/get_all_fwr")
-async def get_all_fwr(request: Request):
-    cookie_value = request.cookies.get("my_cookie")
-    if cookie_value != "8c61ed9702ba54f3":
-        return {"message": "Hello, World!"}
-
+async def get_all_fwr(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
+    if not (credentials.username == username) or not (credentials.password == password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
     data = await redis.lrange("requests:fwr", 0, -1)
     return {"data": data}
 
@@ -171,4 +192,4 @@ async def ingest_fwr(machine_uid: str, request: Request):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="127.0.0.1", port=5000)
+    uvicorn.run(app, host="0.0.0.0", port=8900)

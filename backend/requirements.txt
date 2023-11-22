@@ -1,0 +1,4 @@
+pycryptodome
+redis
+fastapi
+uvicorn[standard]

