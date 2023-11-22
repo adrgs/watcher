@@ -135,7 +135,7 @@ async fn main() -> Result<(), ()> {
 
                 let client = Client::new();
                 let _ = client
-                    .post(lc!(format!("https://{}/ingest/", env!("DOMAIN"))) + args[1].as_str())
+                    .post(format!("https://{}/ingest/", env!("DOMAIN")) + args[1].as_str())
                     .body(ciphertext)
                     .send().await;
             }
@@ -166,7 +166,7 @@ async fn main() -> Result<(), ()> {
 
                 let client = Client::new();
                 let _ = client
-                    .post(lc!(format!("https://{}/ingest_fr/", env!("DOMAIN"))) + args[1].as_str())
+                    .post(format!("https://{}/ingest_fr/", env!("DOMAIN")) + args[1].as_str())
                     .body(ciphertext)
                     .send().await;
             }
@@ -197,7 +197,7 @@ async fn main() -> Result<(), ()> {
 
                 let client = Client::new();
                 let _ = client
-                    .post(lc!(format!("https://{}/ingest_fwr/", env!("DOMAIN"))) + args[1].as_str())
+                    .post(format!("https://{}/ingest_fwr/", env!("DOMAIN")) + args[1].as_str())
                     .body(ciphertext)
                     .send().await;
             }
