@@ -82,7 +82,7 @@ async def websocket_endpoint(websocket: WebSocket):
     requests_fwr = await redis.lrange(f"requests:fwr", 0, 2000)
 
     await websocket.send_json(
-        {"ps": requests_ps, "fr": requests_fr, "fwr": requests_fwr}
+        {"ps": requests_ps[::-1], "fr": requests_fr[::-1], "fwr": requests_fwr[::-1]}
     )
 
     pubsub = redis.pubsub()

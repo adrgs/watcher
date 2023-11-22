@@ -92,30 +92,30 @@
             // for each process
             if (data["ps"].length > 1) {
                 for (let i = 0; i < data["ps"].length; i++) {
-                    $('<tr><td></td></tr>').text(data["ps"][i]).appendTo('#ps');
+                    $('<tr><td></td></tr>').text(data["ps"][i]).prependTo('#ps');
                 }
             } else {
-                $('<tr><td></td></tr>').text(data["ps"][0]).appendTo('#ps');
+                $('<tr><td></td></tr>').text(data["ps"][0]).prependTo('#ps');
             }
         }
         if (data["fr"] && data["fr"].length>0) {
             // for each process
             if (data["fr"].length > 1) {
                 for (let i = 0; i < data["fr"].length; i++) {
-                    $('<tr><td></td></tr>').text(data["fr"][i]).appendTo('#fr');
+                    $('<tr><td></td></tr>').text(data["fr"][i]).prependTo('#fr');
                 }
             } else {
-                $('<tr><td></td></tr>').text(data["fr"][0]).appendTo('#fr');
+                $('<tr><td></td></tr>').text(data["fr"][0]).prependTo('#fr');
             }
         }
         if (data["fwr"] && data["fwr"].length>0) {
             // for each process
             if (data["fwr"].length > 1) {
                 for (let i = 0; i < data["fwr"].length; i++) {
-                    $('<tr><td></td></tr>').text(data["fwr"][i]).appendTo('#fwr');
+                    $('<tr><td></td></tr>').text(data["fwr"][i]).prependTo('#fwr');
                 }
             } else {
-                $('<tr><td></td></tr>').text(data["fwr"][0]).appendTo('#fwr');
+                $('<tr><td></td></tr>').text(data["fwr"][0]).prependTo('#fwr');
             }
         }
         });
